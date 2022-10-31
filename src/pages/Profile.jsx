@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { db } from "../firebase";
+import { FcHome } from "react-icons/fc";
+import { Link } from "react-router-dom";
 
 export default function Profile() {
   const auth = getAuth();
@@ -31,24 +33,23 @@ export default function Profile() {
   };
 
   async function onSubmit() {
-
     try {
-      if(auth.currentUser.displayName !== name){
+      if (auth.currentUser.displayName !== name) {
         // update display name in firebase auth
         await updateProfile(auth.currentUser, {
-          displayName: name
-        })
+          displayName: name,
+        });
 
         // update name in firestore
 
-        const docRef = doc(db, 'users', auth.currentUser.uid)
+        const docRef = doc(db, "users", auth.currentUser.uid);
         await updateDoc(docRef, {
           name,
-        })
-      } 
-      toast.success('Profile details successfully updated!')
+        });
+      }
+      toast.success("Profile details successfully updated!");
     } catch (error) {
-        toast.error('could not update profile details')
+      toast.error("could not update profile details");
     }
   }
 
@@ -60,7 +61,9 @@ export default function Profile() {
           <form action="#">
             {/* {name input} */}
             <input
-              className={`mb-6 w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition ease-in-out ${changeDetail && 'bg-red-200 focus:bg-red-200'}`}
+              className={`mb-6 w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition ease-in-out ${
+                changeDetail && "bg-red-200 focus:bg-red-200"
+              }`}
               type="text"
               id="name"
               value={name}
@@ -80,8 +83,10 @@ export default function Profile() {
               <p className="flex items-center ">
                 Do you want to change your name?
                 <span
-                  onClick={() => {changeDetail && onSubmit()
-                    setChangeDetail((prevState) => !prevState)} }
+                  onClick={() => {
+                    changeDetail && onSubmit();
+                    setChangeDetail((prevState) => !prevState);
+                  }}
                   className="text-red-600 hover:text-red-700 transition ease-in-out duration-200 ml-1 cursor-pointer"
                 >
                   {changeDetail ? "Apply Change" : "Edit"}
@@ -95,6 +100,15 @@ export default function Profile() {
               </p>
             </div>
           </form>
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white uppercase px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-800"
+          >
+            <Link className="flex justify-center items-center" to="/create-listing">
+              <FcHome className="mr-2 text-3xl bg-red-200 rounded-full p-1 border-2" />
+              Sell or rent your home
+            </Link>
+          </button>
         </div>
       </section>
     </>
